@@ -10,6 +10,7 @@ public class Login extends JFrame implements ActionListener {
     JButton login, clear, signUp;
     JTextField cardTextField;
     JPasswordField pinTextField;
+    JLabel cardNo, pin;
 
         Login(){
             setTitle("Automated Teller Machine");
@@ -26,7 +27,7 @@ public class Login extends JFrame implements ActionListener {
             text.setBounds(200, 40,450,40);
             add(text);
 
-            JLabel cardNo = new JLabel("Card No:");
+             cardNo = new JLabel("Card No:");
             cardNo.setFont(new Font("Raleway",Font.BOLD, 28));
             cardNo.setBounds(120,150,150,40);
             add(cardNo);
@@ -36,7 +37,7 @@ public class Login extends JFrame implements ActionListener {
             cardTextField.setFont(new Font("Arial",Font.BOLD,14) );
             add(cardTextField);
 
-            JLabel pin = new JLabel("PIN:");
+            pin = new JLabel("PIN:");
             pin.setFont(new Font("Raleway",Font.BOLD,28));
             pin.setBounds(120,220,400,40);
             add(pin);
@@ -82,10 +83,24 @@ public class Login extends JFrame implements ActionListener {
                 cardTextField.setText("");
                 pinTextField.setText("");
           }else if (ae.getSource() == login){
-              String cardNo = cardTextField.getText();
-              String pin = pinTextField.getText();
+              String cardNumber = cardTextField.getText();
+              String pinnumber = pinTextField.getText();
+              Conn c = new Conn();
+              String querry = "select * from login where cardNumber = '"+ cardNumber +"' and Pinnumber =  '"+ pinnumber +"'";
+              try{
+                ResultSet resultSet =  c.s.executeQuery(querry);
+                if (resultSet.next()){
+                    setVisible(false);
+                    new Transactions(pinnumber).setVisible(true);
+                }else {
+                    JOptionPane.showMessageDialog(null, "Incorect pin or card Number");
+                }
+              }catch (Exception e){
+                  System.out.println(e);
+              }
           }else if(ae.getSource() == signUp){
-
+                setVisible(false);
+                new SignUpOne().setVisible(true);
           }
         }
 
